@@ -1,32 +1,31 @@
-const express=require('express')
-const mongoose=require('mongoose')
-const cors=require('cors')
-const {ApolloServer,gql}=require('apollo-server-express')
-const typeDefs=require('./schema')
-const resolvers=require('./resolvers')
-const userApiFromRouter=require('./routes/userRoutes');
-const port=3001
-const app=express()
+const express = require('express');
+const mongoose = require('mongoose')
+const {ApolloServer,gql } = require('apollo-server-express');
+const typeDefs = require('./schema');
+const resolvers = require('./resolvers');
+const cors = require('cors')//import cors
+const userApiFromRouter = 
+require('./routes/userRoutes') //import
+const app = express() 
+const port = 3001;
+const url= 'mongodb+srv://madhuridhulipudi19:g8CFQaP521fhA65p@cluster0.3kpxupq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'; 
+
 app.use(express.json())
-app.use(cors())
-//const userApiFromRouter=require('./routes/userRoutes');
-const mongoURI = 'mongodb+srv://madhuridhulipudi19:g8CFQaP521fhA65p@cluster0.3kpxupq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'; 
-mongoose.connect(mongoURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(()=>console.log('Mongodb connected')).catch(err=>console.log(err));
-const server=new ApolloServer({typeDefs,resolvers});
+app.use(cors()) //using cors
+mongoose.connect(url,{useNewUrlParser:true,
+useUnifiedTopology:true})
+.then(()=>{})
+.catch((err)=>{})
+
+const server = new ApolloServer({typeDefs,resolvers});
+app.use('/users',userApiFromRouter);//add router
 
 async function StartServer(){
-    await server.start();
-    server.applyMiddleware({app});
-    app.use('/users',userApiFromRouter)
-    app.listen(port,()=>{console.log("server is live")})
+   await server.start();
+   server.applyMiddleware({app});
+   app.listen(port,()=>{
+    console.log('Server Live 3001');
+   })
+}
 
-}
-function Testing(){
-    return 1;
-}
-function test2(){
-    return false;
-}
-Testing();
-test2()
-StartServer()
+StartServer();
